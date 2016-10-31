@@ -1,0 +1,49 @@
+************************************
+	WITHOUT INSTALLATION
+************************************
+
+
+
+UPL is a static library for C/C++ programs. It can be portable to different Linux systems.
+
+No installation is required since you have to include the sources when compiling our programs. For instance, -I /ROOT_DIR/include/upl  and -L /ROOT_DIR/lib
+
+The compilation command will look like the following:
+
+#GCC
+	$ gcc -Wall -O3 -I /ROOT_DIR/include/upl -L /ROOT_DIR/lib program.c -o program -lupl -lm
+#G++
+	$ g++ -Wall -O3 -I /ROOT_DIR/include/upl -L /ROOT_DIR/lib program.cpp -o program -lupl -lm
+
+- Warning: UPL uses math library which requires you to specify '-lm' at the compiler command line
+
+
+
+
+
+***********************************
+	WITH INSTALLATION
+***********************************
+
+
+
+
+Installing in Linux operation system
+
+#coping the include files in the ROOT of the system include libraries
+
+$	cp -rf include/upl/* /usr/include/
+
+#coping the library in the ROOT of the system libraries
+
+$	cp -rf lib/* /usr/lib/
+
+The compilation command will look like the following:
+
+#GCC
+	$ gcc -Wall -O3 program.c -o program -lupl -lm
+#G++
+	$ g++ -Wall -O3 program.cpp -o program -lupl -lm
+
+
+
