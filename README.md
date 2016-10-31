@@ -1,4 +1,4 @@
-# upl
+# UPL
 Utility Performance Library
 
 UPL is a static library and compatible with many Linux operation systems as well as C/C++ programming languages.
