@@ -47,57 +47,75 @@ int main(int argc, char const *argv[]){
 
 	UPL_print_default_metrics();
 		
-	//test_all();
+	test_all();
 
 	return 0;
 }
 
 
-/*void test_all(){
+void test_all(){
 
-	std::cout << "UPL_getThreadID " << UPL_getThreadID() << std::endl;
+	printf("UPL_getThreadID %ld\n", UPL_getThreadID()); 
 
-	std::cout << "UPL_getCpuFreq " << UPL_getCpuFreq() << std::endl;
+	printf("UPL_getCpuFreq %lud\n", UPL_getCpuFreq());
 
-	std::cout << "UPL_getNumOfCores " << UPL_getNumOfCores() << std::endl;
+	printf("UPL_getNumOfCores %ld\n", UPL_getNumOfCores());
 
-	std::cout << "UPL_getRealNumCores " << UPL_getRealNumCores() << std::endl;
+	printf("UPL_getRealNumCores %ld\n", UPL_getRealNumCores());
 
-	std::cout << "UPL_getNumSockets " << UPL_getNumSockets() << std::endl;
+	printf("UPL_getNumSockets %ld\n", UPL_getNumSockets());
 
-	std::cout << "UPL_getCoreID " << UPL_getCoreID() << std::endl;
+	printf("UPL_getCoreID %ld\n", UPL_getCoreID());
 
-	std::cout << "UPL_getCacheLineSize " << UPL_getCacheLineSize() << std::endl;
+	printf("UPL_getCacheLineSize %lud\n", UPL_getCacheLineSize()); 
 
-	std::cout << "UPL_getProcID " << UPL_getProcID() << std::endl;
+	printf("UPL_getProcID %ld\n", UPL_getProcID());
 
-	UPL_showProcStatus();
+	char buff[256];
+	sprintf(buff,"cat /proc/%ld/status",UPL_getProcID());
 
-	UPL_lsCPU();
-
-	UPL_showNumaHardware();
-
-	std::cout << "UPL_getProcMemUsage " << UPL_getProcMemUsage() << std::endl;
-
-	std::cout << "UPL_getProcVoluntary_ctx_switches " << UPL_getProcVoluntary_ctx_switches() << std::endl;
-
-	std::cout << "UPL_getProcNonVoluntary_ctx_switches " << UPL_getProcNonVoluntary_ctx_switches() << std::endl;
-
-	UPL_showProcStat();
+	char *dat = UPL_getCommandResult(buff);
+	printf("==== UPL-BEGIN -> UPL_getProcStatus ====\n");
+	printf("%s\n", dat);
+	printf("==== UPL-END -> UPL_getProcStatus ====\n");
 	
-	std::cout << "UPL_getLastCoreID " << UPL_getLastCoreID() << std::endl;
+	dat = UPL_getCommandResult("lscpu");
+	printf("==== UPL-BEGIN -> UPL_getlsCPU ====\n");
+	printf("%s\n", dat);
+	printf("==== UPL-END -> UPL_getlsCPU ====\n");
+	
+	dat = UPL_getCommandResult("numactl --hardware");
+	printf("==== UPL-BEGIN -> UPL_getNumaHardware ====\n");
+	printf("%s\n", dat);
+	printf("==== UPL-END -> UPL_getNumaHardware ====\n");
+	
 
-	std::cout << "UPL_getProcTotThreads " << UPL_getProcTotThreads() << std::endl;
+	printf("UPL_getProcMemUsage %ld\n", UPL_getProcMemUsage());
 
-	UPL_showSysMemInfo();
+	printf("UPL_getProcVoluntary_ctx_switches %ld\n", UPL_getProcVoluntary_ctx_switches());
+
+	printf("UPL_getProcNonVoluntary_ctx_switches %ld\n", UPL_getProcNonVoluntary_ctx_switches());
+
+	printf("==== UPL-BEGIN -> getProcStat ====\n");
+	printf("%s\n", UPL_getProcStat());
+	printf("==== UPL-END -> getProcStat ====\n");
+
+	printf("UPL_getLastCoreID %ld\n", UPL_getLastCoreID());
+
+	printf("UPL_getProcTotThreads %ld\n", UPL_getProcTotThreads());
+
+	
+	printf("==== UPL-BEGIN -> getSysMemInfo ====\n");
+	printf("%s\n", UPL_getSysMemInfo());
+	printf("==== UPL-END -> getSysMemInfo ====\n");
 
 	ssize_t max_cores = UPL_getNumOfCores();
 	
-	unsigned long long int *total_ticks =  new unsigned long long int [max_cores];
-	unsigned long long int *idle = new unsigned long long int [max_cores];
+	unsigned long long int *total_ticks = (unsigned long long int *) malloc(sizeof(unsigned long long int) *max_cores);
+	unsigned long long int *idle = (unsigned long long int *) malloc(sizeof(unsigned long long int) *max_cores);
 
 	if (UPL_init_cores_load_monitoring(idle, total_ticks) == NULL){
-		std::cout << "Error when UPL_init_cores_load_monitoring(...)" << std::endl;
+		printf("Error when UPL_init_cores_load_monitoring(...)\n");
 	}
 
 	sleep(2);
@@ -105,40 +123,67 @@ int main(int argc, char const *argv[]){
 	double *data = UPL_get_cores_load_average(idle, total_ticks);
 	
 	if (data != NULL){
-		for (i = 0; i < UPL_getNumOfCores(); ++i){
+		for (int i = 0; i < UPL_getNumOfCores(); ++i){
 			printf("	CPU%d Usage: %3.2lf%%\n", i, data[i]);
 		}
 	}else{
-		std::cout << "Error when UPL_get_cores_load_average(...)" << std::endl;
+		printf("Error when UPL_get_cores_load_average(...)\n");
 	}
-	delete idle;
-	delete total_ticks;
-	delete data;
+	free(idle);
+	free(total_ticks);
+	free(data);
 
-	//Warning: do not forget to run ->	sudo modprobe msr	
+	//Warning: do not forget to run ->	sudo modprobe msr
 
-	int *rapl_fd = new int[4];
+	int *rapl_fd = (int *) malloc(sizeof(int) * 4);
 	if(UPL_init_count_rapl(rapl_fd) == 0){
-		std::cout << "Error when UPL_init_count_rapl(...)" << std::endl;
+		printf("Error when UPL_init_count_rapl(...)\n");
 	}
 	
 	sleep(2);
 
 	if(UPL_finalize_count_rapl(rapl_fd) == 0){
-		std::cout << "Error when UPL_finalize_count_rapl(...)" << std::endl;
+		printf("Error when UPL_finalize_count_rapl(...)\n");
 	}
-	delete rapl_fd;
+	free(rapl_fd);
 	
 	double package_before=0.0, cores_before=0.0, gpu_before=0.0, dram_before=0.0;
 	
 	if(UPL_init_count_rapl_msr(&package_before, &cores_before, &gpu_before, &dram_before) == 0){
-		std::cout << "Error when UPL_init_count_rapl_msr(...)" << std::endl;
+		printf("Error when UPL_init_count_rapl_msr(...)\n");
 	}
 	
 	sleep(2);
 	
 	if(UPL_finalize_count_rapl_msr(package_before, cores_before, gpu_before, dram_before) == 0){
-		std::cout << "Error when UPL_finalize_count_rapl_msr(...)" << std::endl;
+		printf("Error when UPL_finalize_count_rapl_msr(...)\n");
 	}
 
-}*/
+	int fd_cache;
+	if(UPL_init_cache_miss_monitoring(&fd_cache) == 0){
+		printf("Error when UPL_init_cache_miss_monitoring(...)\n");
+	}
+
+	sleep(1);
+
+	long long r_cache = UPL_get_cache_miss(fd_cache);
+	if(r_cache < 0){
+		printf("Error when UPL_get_cache_miss(...)\n");
+	}
+
+	printf("UPLib -> Total cache-miss(KB): %lld\n", r_cache);
+
+	int fd_ctx;
+	if(UPL_init_ctx_switches_monitoring(&fd_ctx) == 0){
+		printf("Error when UPL_init_ctx_switches_monitoring(...)\n");
+	}
+
+	sleep(1);
+
+	long long r_ctx = UPL_get_ctx_switches(fd_ctx);
+	if(r_ctx < 0){
+		printf("Error when UPL_get_ctx_switches(...)\n");
+	}
+
+	printf("UPLib -> Total ctx_switches: %lld\n", r_ctx);
+}

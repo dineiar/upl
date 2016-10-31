@@ -73,6 +73,7 @@ void test_all(){
 
 	char buff[256];
 	sprintf(buff,"cat /proc/%ld/status",UPL_getProcID());
+
 	char *dat = UPL_getCommandResult(buff);
 	std::cout << "==== UPL-BEGIN -> UPL_getProcStatus ====" << std::endl;
 	std::cout << dat << std::endl;
@@ -185,7 +186,5 @@ void test_all(){
 	}
 
 	std::cout << "UPLib -> Total ctx_switches: " << r_ctx << std::endl;
-
-
 
 }
