@@ -92,6 +92,9 @@ void test_all(){
 
 	printf("UPL_getProcMemUsage %ld\n", UPL_getProcMemUsage());
 
+	printf("UPL_getProcMemUsage_pid %ld\n", UPL_getProcMemUsage_pid(UPL_getProcID()));
+
+
 	printf("UPL_getProcVoluntary_ctx_switches %ld\n", UPL_getProcVoluntary_ctx_switches());
 
 	printf("UPL_getProcNonVoluntary_ctx_switches %ld\n", UPL_getProcNonVoluntary_ctx_switches());

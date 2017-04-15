@@ -92,6 +92,9 @@ void test_all(){
 
 	std::cout << "UPL_getProcMemUsage " << UPL_getProcMemUsage() << std::endl;
 
+	std::cout << "UPL_getProcMemUsage_pid " << UPL_getProcMemUsage_pid(UPL_getProcID()) << std::endl;
+
+
 	std::cout << "UPL_getProcVoluntary_ctx_switches " << UPL_getProcVoluntary_ctx_switches() << std::endl;
 
 	std::cout << "UPL_getProcNonVoluntary_ctx_switches " << UPL_getProcNonVoluntary_ctx_switches() << std::endl;

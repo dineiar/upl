@@ -128,6 +128,13 @@ char *UPL_getCommandResult(const char *cmd);
 ssize_t UPL_getProcMemUsage();
 
 /**
+ *  \brief Returns the process memory usage (VmHWM) in kB of a specific pid.
+ *	It will return '-1' when there is a error.
+ *
+ */
+ssize_t UPL_getProcMemUsage_pid(size_t mypid);
+
+/**
  *  \brief Returns the voluntary context switches of the current process.
  *	It will return '-1' when there is a error.
  */
