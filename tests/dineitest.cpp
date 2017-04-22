@@ -40,12 +40,12 @@
 #include <iostream>
 
 
-void print_all(int pid);
+void print_all(ssize_t pid);
 
 int main(int argc, char const *argv[]){
 
     if (argc > 1) {
-        int pid = strtol(argv[1], NULL, 10);
+        ssize_t pid = strtol(argv[1], NULL, 10);
 	    printf("Output for pid: %ld \n", pid);
         print_all(pid);
     } else {
@@ -55,9 +55,9 @@ int main(int argc, char const *argv[]){
 	return 0;
 }
 
-void print_all(int pid){
+void print_all(ssize_t pid){
     
-    printf("UPLib -> Memory usage (MB): %Ld \n", (UPL_getProcMemUsage_pid(pid)/1024));
+    printf("UPLib -> Memory usage (KB): %ld \n", UPL_getProcMemUsage_pid(pid));
 
 	char buff[256];
 	sprintf(buff,"cat /proc/%ld/status", pid);
