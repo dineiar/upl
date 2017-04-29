@@ -26,18 +26,12 @@ int main() {
     //Get CPU usage through iostat
     cmd = "iostat -c";
     //avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-    char* result = UPL_getCommandResult(cmd.c_str());
-    fsCPU << std::to_string(timestamp) << "\t" << result;
-    fsCPU.flush();
-    free(result);
+    fsCPU << std::to_string(timestamp) << "\t" << UPL_getCommandResult(cmd.c_str());
     
     //Get disk usage through iostat
     cmd = "iostat -d -m -x -y";
     //Device:  rrqm/s  wrqm/s  r/s  w/s  rMB/s  wMB/s  avgrq-sz  avgqu-sz  await  r_await  w_await  svctm  %util
-    result = UPL_getCommandResult(cmd.c_str());
-    fsDisk << std::to_string(timestamp) << "\t" << result;
-    fsDisk.flush();
-    free(result);
+    fsDisk << std::to_string(timestamp) << "\t" << UPL_getCommandResult(cmd.c_str());
 
     sleep(1);
   }
